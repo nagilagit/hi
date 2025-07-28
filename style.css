@@ -1,0 +1,133 @@
+body {
+    background-image: var(--bg-image);
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: cover;
+}
+
+:root {
+    --text-color: white;
+    --bg-image: url(/assets/bg-mobile.jpg);
+    --switch-bf-url: url(assets/moon-stars.svg) no-repeat center;
+    --movendo-translateX: translateX(-100%);
+    --icone-colos: oklab(92.491% -0.00411 -0.00137 / 0.193);
+}
+
+.light {
+    --text-color: black;
+    --bg-image: url(/assets/bg-mobile-light.jpg);
+    --switch-bf-url: url(assets/sun.svg) no-repeat center;
+    --movendo-translateX: translateX(0%);
+    --icone-colos: rgba(33, 30, 30, 0.14);
+}
+
+#container {
+    padding: 0px 56px;
+    width: 360px;
+    margin: auto;
+    color: var(--text-color);
+}
+
+#profile {
+    text-align: center;
+    padding: 24px;
+}
+
+#profile img {
+    width: 112px;
+}
+
+#profile p {
+    font-weight: 500px;
+    line-height: 24px;
+}
+
+ul {
+    padding: 0;
+    list-style: none;
+    text-align: center;
+}
+
+ul li a {
+    border: 1px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    margin: auto;
+    padding: 16px 24px;
+    background-color: #efeaea1f;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.7s;
+}
+
+li {
+    padding: 8px;
+}
+
+ul li a:hover {
+    background-color: var(--icone-colos);
+    border: 1.5px solid var(--text-color);
+}
+
+#social-links {
+    gap: 16px;
+    justify-content: center;
+    margin-top: 24px 0px;
+    display: flex;
+    gap: 16px;
+    padding: 24px 0;
+    font-size: 24px;
+    color: var(--text-color);
+}
+
+#social-links ion-icon {
+    padding: 16px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#social-links ion-icon:hover {
+    background-color: var(--icone-colos);
+    padding: 16px;
+    border-radius: 50%;
+}
+
+footer {
+    text-align: center;
+    padding: 24px;
+}
+
+#switch {
+    position: relative;
+    width: 64px;
+    height: 24px;
+    margin: auto;
+}
+
+#switch button {
+    z-index: 1;
+    position: absolute;
+    margin: auto;
+    width: 32px;
+    height: 32px;
+    background: white var(--switch-bf-url);
+    border: 0px;
+    border-radius: 50%;
+    transform: var(--movendo-translateX);
+    top: -9%;
+}
+
+#switch span {
+    display: block;
+    width: 64px;
+    height: 24px;
+    border: 1px solid var(--text-color);
+    border-radius: 9999px;
+    margin: auto;
+}
