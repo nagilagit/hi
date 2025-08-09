@@ -86,10 +86,15 @@
 
             <button class="generate-btn" onclick="gerarPix()">Gerar QR Code</button>
             <div id="qrcode"></div>
-            <p id="status"></p>
+            <div class="qr-code-actions">
+                <button id="copyQRBtn" class="action-btn" disabled>
+        <ion-icon name="copy-outline"></ion-icon> Copiar QR Code
+    </button>
+                <p id="status"></p>
+            </div>
             <div class="pix-key">
                 <p>Ou copie a chave PIX:</p>
-                <div class="key-box">+5585984838280</div>
+                <div class="key-box">622e3039-f634-4371-8086-66ed54f3f9a9</div>
             </div>
         </div>
     </div>

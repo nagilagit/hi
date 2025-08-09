@@ -1,15 +1,23 @@
-function toggleMode() {
-    const html = document.documentElement
-    html.classList.toggle('light')
+let qrCodeGenerated = null;
+let currentQRValue = 0;
+let currentPayload = "";
 
-    const img = document.querySelector('#profile img')
+// Modo claro/escuro
+function toggleMode() {
+    const html = document.documentElement;
+    html.classList.toggle('light');
+
+    const img = document.querySelector('#profile img');
 
     if (html.classList.contains('light')) {
-        img.setAttribute('style', 'border-color: #FF1493; box-shadow: 0 0 20px rgba(255, 20, 147, 0.5)')
+        img.setAttribute('style', 'border-color: #FF1493; box-shadow: 0 0 20px rgba(255, 20, 147, 0.5)');
+        img.src = './nagila.jpeg'; // Substitua pelo caminho da foto para o tema claro
     } else {
-        img.setAttribute('style', 'border-color: #FF69B4; box-shadow: 0 0 20px rgba(255, 105, 180, 0.5)')
+        img.setAttribute('style', 'border-color: #FF69B4; box-shadow: 0 0 20px rgba(255, 105, 180, 0.5)');
+        img.src = 'nagila2.jpg'; // Substitua pelo caminho da foto para o tema escuro
     }
 }
+
 
 // Contador de Likes
 const likeButton = document.getElementById('likeButton');
@@ -18,7 +26,6 @@ const likeCount = document.getElementById('likeCount');
 likeButton.addEventListener('click', function() {
     this.classList.toggle('liked');
 
-    // Formatar o número atual
     let currentCount = likeCount.textContent;
     let number = parseFloat(currentCount.replace('K', '')) * 1000;
 
@@ -28,22 +35,22 @@ likeButton.addEventListener('click', function() {
         number -= 1;
     }
 
-    // Formatando para "K" se for acima de 1000
     if (number >= 1000) {
         likeCount.textContent = (number / 1000).toFixed(1) + 'K';
     } else {
         likeCount.textContent = number.toString();
     }
 });
+
 // Modal PIX
 function showPixModal() {
     document.getElementById('pixModal').style.display = 'block';
-    document.body.style.overflow = 'hidden'; // Desabilita scroll
+    document.body.style.overflow = 'hidden';
 }
 
 function hidePixModal() {
     document.getElementById('pixModal').style.display = 'none';
-    document.body.style.overflow = 'auto'; // Habilita scroll
+    document.body.style.overflow = 'auto';
 }
 
 // Fechar modal ao clicar fora
@@ -52,7 +59,7 @@ window.onclick = function(event) {
     if (event.target == modal) {
         hidePixModal();
     }
-}
+};
 
 // Copiar chave PIX
 document.querySelector('.key-box').addEventListener('click', function() {
@@ -64,17 +71,29 @@ document.querySelector('.key-box').addEventListener('click', function() {
     });
 });
 
-// Gerador PIX (mantido do código original)
+// Função auxiliar para gerar campos PIX
+function campo(tag, valor) {
+    const tamanho = valor.length.toString().padStart(2, '0');
+    return tag + tamanho + valor;
+}
+
+// Gerador PIX compatível com PicPay
 function gerarPix() {
     const valor = parseFloat(document.getElementById("valor").value);
+    const statusEl = document.getElementById("status");
+
     if (!valor || valor < 1) {
-        document.getElementById("status").textContent = "Valor inválido! Mínimo R$1";
+        statusEl.textContent = "Valor inválido! Mínimo R$1";
         return;
     }
 
-    const chavePix = "+5585984838280";
-    const nomeBeneficiario = "WENDERSON ARAUJO DE OLIVEIRA";
+    currentQRValue = valor;
+
+    // Experimente com e sem o "+"
+    const chavePix = "622e3039-f634-4371-8086-66ed54f3f9a9";
+    const nomeBeneficiario = "NAGILA LIMA DA CUNHA";
     const cidadeBeneficiario = "QUIXADA";
+    const txid = "TX" + Date.now().toString().slice(-8); // TXID único, até 25 caracteres
 
     function campo(tag, valor) {
         const tamanho = valor.length.toString().padStart(2, '0');
@@ -85,33 +104,54 @@ function gerarPix() {
         campo("00", "br.gov.bcb.pix") +
         campo("01", chavePix);
 
-    const additionalDataField = campo("05", "***");
+    const additionalDataField = campo("05", txid);
 
     const payloadSemCRC =
-        campo("00", "01") +
+        campo("00", "01") + // Payload Format Indicator
         campo("26", merchantAccountInfo) +
-        "52040000" +
-        "5303986" +
-        campo("54", valor.toFixed(2)) +
-        "5802BR" +
+        campo("52", "0000") + // MCC
+        campo("53", "986") + // Moeda BRL
+        campo("54", valor.toFixed(2).replace(",", ".")) + // Valor
+        campo("58", "BR") +
         campo("59", nomeBeneficiario) +
         campo("60", cidadeBeneficiario) +
         campo("62", additionalDataField) +
         "6304";
 
     const crc = calcularCRC16(payloadSemCRC);
-    const payloadFinal = payloadSemCRC + crc;
+    currentPayload = payloadSemCRC + crc;
 
     document.getElementById("qrcode").innerHTML = "";
-    new QRCode(document.getElementById("qrcode"), {
-        text: payloadFinal,
+    qrCodeGenerated = new QRCode(document.getElementById("qrcode"), {
+        text: currentPayload,
         width: 180,
         height: 180
     });
 
-    document.getElementById("status").textContent = "QR Code gerado com sucesso!";
+    document.getElementById("copyQRBtn").disabled = false;
+    statusEl.textContent = `QR Code de R$${valor.toFixed(2)} gerado!`;
 }
 
+
+// Função para copiar código PIX puro
+document.getElementById("copyQRBtn").addEventListener("click", function() {
+    if (!currentPayload) return;
+
+    navigator.clipboard.writeText(currentPayload).then(() => {
+        const status = document.getElementById("status");
+        status.textContent = "Código PIX copiado!";
+        setTimeout(() => status.textContent = '', 3000);
+
+        const btn = document.getElementById("copyQRBtn");
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<ion-icon name="checkmark-outline"></ion-icon>';
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+        }, 2000);
+    });
+});
+
+// Cálculo CRC16
 function calcularCRC16(data) {
     let crc = 0xFFFF;
     for (let i = 0; i < data.length; i++) {
@@ -124,17 +164,14 @@ function calcularCRC16(data) {
     return crc.toString(16).toUpperCase().padStart(4, '0');
 }
 
+// Botões + e -
 function changeValue(amount) {
     const input = document.getElementById("valor");
     let value = parseInt(input.value) || 0;
     value += amount;
-
-    // Garante que o valor não seja menor que 1
     if (value < 1) value = 1;
-
     input.value = value;
 
-    // Efeito visual no botão pressionado
     const button = amount > 0 ? document.querySelector('.plus') : document.querySelector('.minus');
     button.style.transform = 'scale(0.95)';
     setTimeout(() => {
