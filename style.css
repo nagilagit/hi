@@ -242,3 +242,215 @@ footer {
         padding: 14px;
     }
 }
+
+.like-counter {
+    margin: 16px auto;
+    text-align: center;
+}
+
+#likeButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--surface-color);
+    border: 1px solid var(--pink-accent);
+    border-radius: 9999px;
+    color: var(--text-color);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+#likeButton:hover {
+    background: var(--highlight-color);
+    transform: scale(1.05);
+}
+
+#likeButton ion-icon {
+    color: var(--pink-accent);
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+#likeButton.liked ion-icon {
+    color: #ff0000;
+    fill: #ff0000;
+    animation: pulse 0.5s ease;
+}
+
+#likeCount {
+    font-size: 14px;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.3);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: var(--surface-color);
+    border: 1px solid var(--pink-accent);
+    border-radius: 15px;
+    margin: 10% auto;
+    padding: 25px;
+    width: 90%;
+    max-width: 400px;
+    color: var(--text-color);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 0 25px rgba(255, 105, 180, 0.3);
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.close-modal {
+    color: var(--text-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-modal:hover {
+    color: var(--pink-accent);
+}
+
+.modal h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--pink-accent);
+    font-size: 1.5rem;
+}
+
+.modal p {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.modal input[type="number"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border: 1px solid var(--pink-accent);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    font-size: 1rem;
+    text-align: center;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.modal input[type="number"]:focus {
+    border-color: var(--text-color);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.modal button {
+    width: 100%;
+    padding: 12px;
+    margin: 15px 0;
+    background: var(--pink-accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.modal button:hover {
+    background: #ff4785;
+    transform: translateY(-2px);
+}
+
+#qrcode {
+    margin: 15px auto;
+    padding: 10px;
+    background: white;
+    border-radius: 10px;
+    width: 180px;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#qrcode img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#status {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: var(--pink-accent);
+}
+
+.pix-key {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.key-box {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--pink-accent);
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 10px;
+    font-family: monospace;
+    word-break: break-all;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.key-box:hover {
+    background: rgba(255, 105, 180, 0.2);
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        margin: 20% auto;
+        padding: 20px;
+    }
+    #qrcode {
+        width: 150px;
+        height: 150px;
+    }
+}

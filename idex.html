@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 </head>
 
 <body>
@@ -19,11 +20,19 @@
             <img src="./nagila.jpeg" alt="Foto de Nagila Lima, criadora de conteúdo no TikTok" class="profile-img">
 
             <p>@Nagilalima22</p>
-            <p class="bio">Streamer • Dançarina • Criadora de Conteúdo</p>
+            <p class="bio">Streamer • fisioterapeuta • Criadora de Conteúdo</p>
 
             <div id="switch" onclick="toggleMode()">
                 <button></button>
                 <span></span>
+            </div>
+
+            <!-- Contador de Likes -->
+            <div class="like-counter">
+                <button id="likeButton">
+                    <ion-icon name="heart"></ion-icon>
+                    <span id="likeCount">1.2K</span>
+                </button>
             </div>
 
         </div>
@@ -39,7 +48,7 @@
                 <a href="#" target="_blank">Tutorial de Danças</a>
             </li>
             <li>
-                <a href="#" target="_blank">Seja um Apoiador</a>
+                <a href="#" id="supportButton" onclick="showPixModal()">Seja um Apoiador</a>
             </li>
             <li>
                 <a href="#" target="_blank">Contato Profissional</a>
@@ -56,14 +65,26 @@
             <a href="#" target="_blank">
                 <ion-icon name="logo-youtube"></ion-icon>
             </a>
-            <a href="#" target="_blank">
-                <ion-icon name="heart-outline"></ion-icon>
-            </a>
         </div>
         <footer>
             💖 Conteúdo diário no TikTok! 💖<br> Live todos os dias às 20h
         </footer>
 
+    </div>
+    <div id="pixModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="hidePixModal()">&times;</span>
+            <h3>💖 Apoie meu trabalho</h3>
+            <p>Digite o valor (mínimo R$1):</p>
+            <input type="number" id="valor" min="1" step="0.01" placeholder="Ex: 10.50" />
+            <button onclick="gerarPix()">Gerar QR Code</button>
+            <div id="qrcode"></div>
+            <p id="status"></p>
+            <div class="pix-key">
+                <p>Ou copie a chave PIX:</p>
+                <div class="key-box">+5585984838280</div>
+            </div>
+        </div>
     </div>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
