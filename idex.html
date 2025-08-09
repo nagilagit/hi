@@ -3,6 +3,8 @@
 
 <head>
     <!-- Meta tags básicas -->
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -37,9 +39,9 @@
             <p><strong>@Nagilalima22</strong></p>
             <p class="bio">Streamer • fisioterapeuta • Criadora de Conteúdo</p>
 
-            <div id="switch" role="button" tabindex="0" aria-pressed="false" aria-label="Alternar tema claro/escuro" onclick="toggleMode()" onkeydown="if(event.key === 'Enter' || event.key === ' ') toggleMode()">
-                <button aria-hidden="true"></button>
-                <span></span>
+            <div id="switch" role="switch" tabindex="0" aria-checked="false" aria-label="Alternar tema claro/escuro" onclick="toggleMode()" onkeydown="if(event.key === 'Enter' || event.key === ' ') toggleMode()">
+                <span class="switch-button"></span>
+                <span class="switch-track"></span>
             </div>
 
             <!-- Contador de Likes -->
@@ -119,10 +121,23 @@
             <div class="video-grid" aria-live="polite" aria-atomic="true">
                 <!-- Vídeos serão carregados aqui via JavaScript -->
 
-                <iframe class="video-container" src="https://www.tiktok.com/embed/v2/7502111719888669958" allow="accelerometer; gyroscope; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
-                <iframe class="video-container" src="https://www.tiktok.com/embed/v2/7503236531558092087" allow="accelerometer; gyroscope; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
-                <iframe class="video-container" src="https://www.tiktok.com/embed/v2/7403032047154924805" allow="accelerometer; gyroscope; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+                <div class="video-container" data-video-id="7502111719888669958">
+                    <div class="tiktok-embed-placeholder">
+                        <p>Carregando vídeo do TikTok...</p>
+                    </div>
+                </div>
 
+                <div class="video-container" data-video-id="7503236531558092087">
+                    <div class="tiktok-embed-placeholder">
+                        <p>Carregando vídeo do TikTok...</p>
+                    </div>
+                </div>
+
+                <div class="video-container" data-video-id="7403032047154924805">
+                    <div class="tiktok-embed-placeholder">
+                        <p>Carregando vídeo do TikTok...</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

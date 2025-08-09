@@ -1,8 +1,11 @@
+// Variáveis globais
 let qrCodeGenerated = null;
 let currentQRValue = 0;
 let currentPayload = "";
 
+// =========================
 // Modo claro/escuro
+// =========================
 function toggleMode() {
     const html = document.documentElement;
     html.classList.toggle('light');
@@ -10,42 +13,50 @@ function toggleMode() {
     const img = document.querySelector('#profile img');
     if (!img) return;
 
-    if (html.classList.contains('light')) {
+    if (html.classList.contains('light' || '')) {
         img.style.borderColor = '#FF1493';
         img.style.boxShadow = '0 0 20px rgba(255, 20, 147, 0.5)';
-        img.src = './nagila.jpeg';
+        img.src = './nagila.jpeg'; // caminho da imagem para o modo claro
     } else {
         img.style.borderColor = '#FF69B4';
         img.style.boxShadow = '0 0 20px rgba(255, 105, 180, 0.5)';
-        img.src = 'nagila2.jpg';
+        img.src = './nagila2.jpg'; // caminho da imagem para o modo escuro
     }
 }
 
+
+// =========================
 // Contador de Likes
-const likeButton = document.getElementById('likeButton');
-const likeCount = document.getElementById('likeCount');
+// =========================
+function setupLikeButton() {
+    const likeButton = document.getElementById('likeButton');
+    const likeCount = document.getElementById('likeCount');
 
-if (likeButton && likeCount) {
-    likeButton.addEventListener('click', function() {
-        this.classList.toggle('liked');
+    if (likeButton && likeCount) {
+        likeButton.addEventListener('click', function() {
+            this.classList.toggle('liked');
 
-        let number = parseFloat(likeCount.textContent.replace('K', '')) *
-            (likeCount.textContent.includes('K') ? 1000 : 1);
+            let number = parseFloat(likeCount.textContent.replace('K', '')) *
+                (likeCount.textContent.includes('K') ? 1000 : 1);
 
-        number += this.classList.contains('liked') ? 1 : -1;
+            number += this.classList.contains('liked') ? 1 : -1;
 
-        likeCount.textContent = number >= 1000 ?
-            (number / 1000).toFixed(1) + 'K' :
-            number.toString();
-    });
+            likeCount.textContent = number >= 1000 ?
+                (number / 1000).toFixed(1) + 'K' :
+                number.toString();
+        });
+    }
 }
 
+// =========================
 // Modal PIX
+// =========================
 function showPixModal() {
     const modal = document.getElementById('pixModal');
     if (!modal) return;
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
+    document.getElementById('valor').focus();
 }
 
 function hidePixModal() {
@@ -55,40 +66,37 @@ function hidePixModal() {
     document.body.style.overflow = 'auto';
 }
 
-window.onclick = function(event) {
-    const modal = document.getElementById('pixModal');
-    if (modal && event.target === modal) hidePixModal();
-};
-
-// Copiar chave PIX
-const keyBox = document.querySelector('.key-box');
-if (keyBox) {
-    keyBox.addEventListener('click', function() {
-        const chave = this.textContent.trim();
-        navigator.clipboard.writeText(chave).then(() => {
-            const status = document.getElementById('status');
-            if (status) {
-                status.textContent = 'Chave PIX copiada!';
-                setTimeout(() => status.textContent = '', 3000);
-            }
+function setupPixKeyCopy() {
+    const keyBox = document.querySelector('.key-box');
+    if (keyBox) {
+        keyBox.addEventListener('click', function() {
+            const chave = this.textContent.trim();
+            copyToClipboard(chave).then(() => {
+                const status = document.getElementById('status');
+                if (status) {
+                    status.textContent = 'Chave PIX copiada!';
+                    setTimeout(() => status.textContent = '', 3000);
+                }
+            });
         });
-    });
+    }
 }
 
-// Função auxiliar para gerar campos PIX
+// =========================
+// Gerador PIX
+// =========================
 function campo(tag, valor) {
     const tamanho = valor.length.toString().padStart(2, '0');
     return tag + tamanho + valor;
 }
 
-// Gerador PIX compatível com PicPay
 function gerarPix() {
     const inputValor = document.getElementById("valor");
     const statusEl = document.getElementById("status");
     if (!inputValor || !statusEl) return;
 
-    const valor = parseFloat(inputValor.value);
-    if (!valor || valor < 1) {
+    const valor = parseFloat(inputValor.value.replace(',', '.'));
+    if (isNaN(valor) || valor < 1) {
         statusEl.textContent = "Valor inválido! Mínimo R$1";
         return;
     }
@@ -107,7 +115,7 @@ function gerarPix() {
         campo("26", merchantAccountInfo) +
         campo("52", "0000") +
         campo("53", "986") +
-        campo("54", valor.toFixed(2).replace(",", ".")) +
+        campo("54", valor.toFixed(2)) +
         campo("58", "BR") +
         campo("59", nomeBeneficiario) +
         campo("60", cidadeBeneficiario) +
@@ -120,11 +128,17 @@ function gerarPix() {
     const qrContainer = document.getElementById("qrcode");
     if (qrContainer) {
         qrContainer.innerHTML = "";
-        qrCodeGenerated = new QRCode(qrContainer, {
-            text: currentPayload,
-            width: 180,
-            height: 180
-        });
+        try {
+            qrCodeGenerated = new QRCode(qrContainer, {
+                text: currentPayload,
+                width: 180,
+                height: 180
+            });
+        } catch (error) {
+            console.error("Erro ao gerar QR Code:", error);
+            statusEl.textContent = "Erro ao gerar QR Code";
+            return;
+        }
     }
 
     const copyBtn = document.getElementById("copyQRBtn");
@@ -133,29 +147,6 @@ function gerarPix() {
     statusEl.textContent = `QR Code de R$${valor.toFixed(2)} gerado!`;
 }
 
-// Copiar código PIX puro
-const copyQRBtn = document.getElementById("copyQRBtn");
-if (copyQRBtn) {
-    copyQRBtn.addEventListener("click", function() {
-        if (!currentPayload) return;
-
-        navigator.clipboard.writeText(currentPayload).then(() => {
-            const status = document.getElementById("status");
-            if (status) {
-                status.textContent = "Código PIX copiado!";
-                setTimeout(() => status.textContent = '', 3000);
-            }
-
-            const originalText = copyQRBtn.innerHTML;
-            copyQRBtn.innerHTML = '<ion-icon name="checkmark-outline"></ion-icon>';
-            setTimeout(() => {
-                copyQRBtn.innerHTML = originalText;
-            }, 2000);
-        });
-    });
-}
-
-// Cálculo CRC16
 function calcularCRC16(data) {
     let crc = 0xFFFF;
     for (let i = 0; i < data.length; i++) {
@@ -168,7 +159,9 @@ function calcularCRC16(data) {
     return crc.toString(16).toUpperCase().padStart(4, '0');
 }
 
-// Botões + e -
+// =========================
+// Controle de valor PIX
+// =========================
 function changeValue(amount) {
     const input = document.getElementById("valor");
     if (!input) return;
@@ -187,7 +180,9 @@ function changeValue(amount) {
     }
 }
 
-// Mostrar modal de vídeos
+// =========================
+// Modal de Vídeos
+// =========================
 function showVideosModal() {
     const modal = document.getElementById('videosModal');
     if (!modal) return;
@@ -198,25 +193,26 @@ function showVideosModal() {
     // Carrega os vídeos sem autoplay
     document.querySelectorAll('.video-container:not(.loaded)').forEach(container => {
         const videoId = container.getAttribute('data-video-id');
-        container.innerHTML = `
-            <div class="video-play-overlay">
-                <ion-icon name="play-circle-outline"></ion-icon>
-                <p>Clique para assistir</p>
-            </div>
-            <iframe src="https://www.tiktok.com/embed/v2/${videoId}?autoplay=0"
-                    frameborder="0"
-                    allowfullscreen
-                    loading="lazy"
-                    allow="autoplay"
-                    style="width:100%;height:100%;">
-            </iframe>`;
-        container.classList.add('loaded');
+        if (videoId) {
+            container.innerHTML = `
+                <div class="video-play-overlay">
+                    <ion-icon name="play-circle-outline"></ion-icon>
+                    <p>Clique para assistir</p>
+                </div>
+                <iframe src="https://www.tiktok.com/embed/v2/${videoId}?autoplay=0"
+                        frameborder="0"
+                        allowfullscreen
+                        loading="lazy"
+                        allow="autoplay"
+                        style="width:100%;height:100%;">
+                </iframe>`;
+            container.classList.add('loaded');
+        }
     });
 
     // Controle de clique nos vídeos
     document.querySelectorAll('.video-container').forEach(container => {
         container.addEventListener('click', function(e) {
-            // Evita que clique no iframe dispare o evento
             if (e.target.tagName === 'IFRAME') return;
 
             const iframe = this.querySelector('iframe');
@@ -269,20 +265,49 @@ function hideModal(modalId) {
     document.body.style.overflow = 'auto';
 }
 
-function hideModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (!modal) return;
-    modal.style.display = 'none';
-    document.body.style.overflow = 'auto';
+// =========================
+// Utilitários
+// =========================
+function copyToClipboard(text) {
+    if (!navigator.clipboard) {
+        // Fallback para navegadores antigos
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        return Promise.resolve();
+    }
+    return navigator.clipboard.writeText(text);
 }
 
-document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('modal')) hideModal(e.target.id);
-});
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') document.querySelectorAll('.modal').forEach(m => hideModal(m.id));
-});
+function setupCopyQRButton() {
+    const copyQRBtn = document.getElementById("copyQRBtn");
+    if (copyQRBtn) {
+        copyQRBtn.addEventListener("click", function() {
+            if (!currentPayload) return;
 
+            copyToClipboard(currentPayload).then(() => {
+                const status = document.getElementById("status");
+                if (status) {
+                    status.textContent = "Código PIX copiado!";
+                    setTimeout(() => status.textContent = '', 3000);
+                }
+
+                const originalText = copyQRBtn.innerHTML;
+                copyQRBtn.innerHTML = '<ion-icon name="checkmark-outline"></ion-icon> Copiado!';
+                setTimeout(() => {
+                    copyQRBtn.innerHTML = originalText;
+                }, 2000);
+            });
+        });
+    }
+}
+
+// =========================
+// Ajuste de layout responsivo
+// =========================
 function adjustVideoHeight() {
     const containers = document.querySelectorAll('.video-container');
     const isMobile = window.innerWidth < 768;
@@ -292,5 +317,28 @@ function adjustVideoHeight() {
     });
 }
 
-window.addEventListener('load', adjustVideoHeight);
+// =========================
+// Inicialização
+// =========================
+document.addEventListener('DOMContentLoaded', function() {
+    setupLikeButton();
+    setupPixKeyCopy();
+    setupCopyQRButton();
+    adjustVideoHeight();
+
+    // Fechar modais ao clicar fora
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal')) {
+            hideModal(e.target.id);
+        }
+    });
+
+    // Fechar modais com ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal').forEach(m => hideModal(m.id));
+        }
+    });
+});
+
 window.addEventListener('resize', adjustVideoHeight);
