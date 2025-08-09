@@ -950,3 +950,108 @@ input[type=number] {
     text-decoration: none;
     font-weight: bold;
 }
+
+
+/*teste test*/
+
+
+/* Container principal - Grid no desktop */
+
+.video-container-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+
+/* Versão mobile - transforma em carrossel vertical */
+
+@media (max-width: 768px) {
+    .video-container-wrapper {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        scroll-snap-type: y mandatory;
+        height: 70vh;
+        gap: 0;
+    }
+    .video-item {
+        scroll-snap-align: start;
+        min-height: 100vh;
+        margin-bottom: 10px;
+    }
+    /* Esconde a barra de rolagem */
+    .video-container-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+    /* Indicadores (pontinhos) */
+    .carousel-dots {
+        display: flex;
+        justify-content: center;
+        padding: 15px 0;
+        gap: 10px;
+    }
+    .carousel-dots .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+    }
+    .carousel-dots .dot.active {
+        background: var(--pink-accent);
+    }
+}
+
+
+/* No desktop, esconde os indicadores */
+
+@media (min-width: 769px) {
+    .carousel-dots {
+        display: none;
+    }
+}
+
+video-item {
+    position: relative;
+    width: 100%;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--pink-accent);
+}
+
+
+/* Ajuste específico para mobile */
+
+@media (max-width: 768px) {
+    .video-item {
+        height: 80vh !important;
+        /* Altura ocupando 80% da tela */
+        min-height: 80vh !important;
+        /* Remove o min-height anterior */
+        margin-bottom: 15px;
+        flex: 0 0 auto;
+        /* Impede que os vídeos se estiquem */
+    }
+    .video-item iframe {
+        height: 100% !important;
+        width: 100% !important;
+    }
+}
+
+
+/* Mantenha o grid para desktop */
+
+@media (min-width: 769px) {
+    .video-container-wrapper {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    .video-item {
+        aspect-ratio: 9/16;
+        /* Mantém proporção vertical */
+        height: auto;
+    }
+}

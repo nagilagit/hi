@@ -190,61 +190,61 @@ function showVideosModal() {
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
 
-    // Carrega os vídeos sem autoplay
-    document.querySelectorAll('.video-container:not(.loaded)').forEach(container => {
-        const videoId = container.getAttribute('data-video-id');
-        if (videoId) {
-            container.innerHTML = `
-                <div class="video-play-overlay">
-                    <ion-icon name="play-circle-outline"></ion-icon>
-                    <p>Clique para assistir</p>
-                </div>
+    // Carrega vídeos
+    loadVideos();
+
+    // Configura carrossel apenas no mobile
+    if (window.innerWidth <= 768) {
+        setupMobileCarousel();
+    }
+}
+
+function loadVideos() {
+    document.querySelectorAll('.video-item').forEach(item => {
+        const videoId = item.getAttribute('data-video-id');
+        if (!item.classList.contains('loaded')) {
+            item.innerHTML = `
                 <iframe src="https://www.tiktok.com/embed/v2/${videoId}?autoplay=0"
-                        frameborder="0"
-                        allowfullscreen
-                        loading="lazy"
-                        allow="autoplay"
-                        style="width:100%;height:100%;">
-                </iframe>`;
-            container.classList.add('loaded');
+                    frameborder="0" 
+                    allowfullscreen 
+                    loading="lazy"
+                    style="width:100%;height:100%;"></iframe>
+                <div class="video-overlay">
+                    <ion-icon name="play-circle-outline"></ion-icon>
+                </div>`;
+            item.classList.add('loaded');
         }
     });
+}
 
-    // Controle de clique nos vídeos
-    document.querySelectorAll('.video-container').forEach(container => {
-        container.addEventListener('click', function(e) {
-            if (e.target.tagName === 'IFRAME') return;
+function setupMobileCarousel() {
+    const dotsContainer = document.querySelector('.carousel-dots');
+    const videos = document.querySelectorAll('.video-item');
 
-            const iframe = this.querySelector('iframe');
-            const overlay = this.querySelector('.video-play-overlay');
+    // Cria dots
+    dotsContainer.innerHTML = '';
+    videos.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => {
+            videos[i].scrollIntoView({ behavior: 'smooth' });
+        });
+        dotsContainer.appendChild(dot);
+    });
 
-            // Pausa todos os outros vídeos
-            document.querySelectorAll('.video-container').forEach(otherContainer => {
-                if (otherContainer !== container) {
-                    const otherIframe = otherContainer.querySelector('iframe');
-                    const otherOverlay = otherContainer.querySelector('.video-play-overlay');
-
-                    if (otherIframe) {
-                        otherIframe.src = otherIframe.src.replace('autoplay=1', 'autoplay=0');
-                    }
-                    if (otherOverlay) {
-                        otherOverlay.style.display = 'flex';
-                    }
-                }
-            });
-
-            // Toca o vídeo clicado
-            if (iframe && overlay) {
-                if (iframe.src.includes('autoplay=1')) {
-                    iframe.src = iframe.src.replace('autoplay=1', 'autoplay=0');
-                    overlay.style.display = 'flex';
-                } else {
-                    iframe.src = iframe.src.replace('autoplay=0', 'autoplay=1');
-                    overlay.style.display = 'none';
-                }
+    // Atualiza dots durante o scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const index = [...videos].indexOf(entry.target);
+                document.querySelectorAll('.dot').forEach((dot, i) => {
+                    dot.classList.toggle('active', i === index);
+                });
             }
         });
-    });
+    }, { threshold: 0.7 });
+
+    videos.forEach(video => observer.observe(video));
 }
 
 function hideModal(modalId) {
@@ -342,3 +342,16 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 window.addEventListener('resize', adjustVideoHeight);
+document.addEventListener('click', (e) => {
+    const videoOverlay = e.target.closest('.video-overlay');
+    if (videoOverlay) {
+        const iframe = videoOverlay.previousElementSibling;
+        if (iframe) {
+            if (iframe.src.includes('autoplay=0')) {
+                iframe.src = iframe.src.replace('autoplay=0', 'autoplay=1');
+                videoOverlay.style.display = 'none';
+            }
+        }
+    }
+});
+console.log('Altura do vídeo:', document.querySelector('.video-item').offsetHeight);

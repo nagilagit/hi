@@ -113,32 +113,27 @@
     </div>
 
     <!-- Modal Vídeos -->
-    <div id="videosModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="videosModalTitle" tabindex="-1">
+    <div id="videosModal" class="modal">
         <div class="modal-content videos-content">
-            <button class="close-modal" aria-label="Fechar modal" onclick="hideModal('videosModal')">&times;</button>
-            <h3 id="videosModalTitle">🎥 Vídeos Populares</h3>
+            <button class="close-modal" onclick="hideModal('videosModal')">&times;</button>
+            <h3>🎥 Vídeos Populares</h3>
 
-            <div class="video-grid" aria-live="polite" aria-atomic="true">
-                <!-- Vídeos serão carregados aqui via JavaScript -->
-
-                <div class="video-container" data-video-id="7502111719888669958">
-                    <div class="tiktok-embed-placeholder">
-                        <p>Carregando vídeo do TikTok...</p>
-                    </div>
+            <!-- Container principal que muda entre grid (desktop) e carrossel (mobile) -->
+            <div class="video-container-wrapper">
+                <!-- Vídeos (mantenha seus IDs) -->
+                <div class="video-item" data-video-id="7502111719888669958">
+                    <div class="video-placeholder">Carregando vídeo 1...</div>
                 </div>
-
-                <div class="video-container" data-video-id="7503236531558092087">
-                    <div class="tiktok-embed-placeholder">
-                        <p>Carregando vídeo do TikTok...</p>
-                    </div>
+                <div class="video-item" data-video-id="7503236531558092087">
+                    <div class="video-placeholder">Carregando vídeo 2...</div>
                 </div>
-
-                <div class="video-container" data-video-id="7403032047154924805">
-                    <div class="tiktok-embed-placeholder">
-                        <p>Carregando vídeo do TikTok...</p>
-                    </div>
+                <div class="video-item" data-video-id="7403032047154924805">
+                    <div class="video-placeholder">Carregando vídeo 3...</div>
                 </div>
             </div>
+
+            <!-- Indicadores (só aparecem no mobile) -->
+            <div class="carousel-dots"></div>
         </div>
     </div>
 
