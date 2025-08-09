@@ -2,6 +2,7 @@
 let qrCodeGenerated = null;
 let currentQRValue = 0;
 let currentPayload = "";
+let currentPlayingVideo = null;
 
 // =========================
 // Modo claro/escuro
@@ -13,17 +14,16 @@ function toggleMode() {
     const img = document.querySelector('#profile img');
     if (!img) return;
 
-    if (html.classList.contains('light' || '')) {
+    if (html.classList.contains('light')) {
         img.style.borderColor = '#FF1493';
         img.style.boxShadow = '0 0 20px rgba(255, 20, 147, 0.5)';
-        img.src = './nagila.jpeg'; // caminho da imagem para o modo claro
+        img.src = './nagila.jpeg';
     } else {
         img.style.borderColor = '#FF69B4';
         img.style.boxShadow = '0 0 20px rgba(255, 105, 180, 0.5)';
-        img.src = './nagila2.jpg'; // caminho da imagem para o modo escuro
+        img.src = './nagila2.jpg';
     }
 }
-
 
 // =========================
 // Contador de Likes
@@ -181,7 +181,7 @@ function changeValue(amount) {
 }
 
 // =========================
-// Modal de Vídeos
+// Modal de Vídeos - Controle corrigido para autoplay controlado
 // =========================
 function showVideosModal() {
     const modal = document.getElementById('videosModal');
@@ -190,10 +190,8 @@ function showVideosModal() {
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
 
-    // Carrega vídeos
     loadVideos();
 
-    // Configura carrossel apenas no mobile
     if (window.innerWidth <= 768) {
         setupMobileCarousel();
     }
@@ -204,24 +202,83 @@ function loadVideos() {
         const videoId = item.getAttribute('data-video-id');
         if (!item.classList.contains('loaded')) {
             item.innerHTML = `
-                <iframe src="https://www.tiktok.com/embed/v2/${videoId}?autoplay=0"
-                    frameborder="0" 
-                    allowfullscreen 
-                    loading="lazy"
-                    style="width:100%;height:100%;"></iframe>
-                <div class="video-overlay">
-                    <ion-icon name="play-circle-outline"></ion-icon>
+                <iframe src="https://www.tiktok.com/embed/v2/${videoId}?autoplay=0" 
+                        frameborder="0" 
+                        allowfullscreen 
+                        allow="autoplay"
+                        loading="lazy"
+                        class="tiktok-iframe"></iframe>
+                <div class="video-overlay" style="display:flex; align-items:center; justify-content:center; position:absolute; top:0; left:0; right:0; bottom:0; cursor:pointer; background:rgba(0,0,0,0.3);">
+                    <ion-icon name="play-circle-outline" style="font-size:64px; color:white;"></ion-icon>
                 </div>`;
+            item.style.position = 'relative';
             item.classList.add('loaded');
         }
     });
+}
+
+document.addEventListener('click', function(e) {
+    const overlay = e.target.closest('.video-overlay');
+    const modal = document.getElementById('videosModal');
+
+    if (overlay) {
+        const videoItem = overlay.parentElement;
+        const iframe = videoItem.querySelector('iframe');
+
+        if (currentPlayingVideo && currentPlayingVideo !== iframe) {
+            const currentOverlay = currentPlayingVideo.parentElement.querySelector('.video-overlay');
+            pauseVideo(currentPlayingVideo, currentOverlay);
+        }
+
+        playVideo(iframe, overlay);
+        return;
+    }
+
+    if (modal && modal.style.display === 'block' && !e.target.closest('.video-item')) {
+        if (currentPlayingVideo) {
+            const overlay = currentPlayingVideo.parentElement.querySelector('.video-overlay');
+            pauseVideo(currentPlayingVideo, overlay);
+        }
+    }
+});
+
+function playVideo(iframe, overlay) {
+    if (window.innerWidth <= 768) {
+        // Mobile: apenas oculta o overlay para permitir controle nativo do player
+        overlay.style.display = 'none';
+        currentPlayingVideo = iframe;
+        return;
+    }
+
+    if (iframe.src.includes('autoplay=1')) return; // já tocando
+
+    iframe.src = iframe.src.replace('autoplay=0', 'autoplay=1');
+    overlay.style.display = 'none';
+    currentPlayingVideo = iframe;
+}
+
+function pauseVideo(iframe, overlay) {
+    if (window.innerWidth <= 768) {
+        // Mobile: recarrega iframe para parar o vídeo e mostra overlay
+        const src = iframe.src;
+        iframe.src = '';
+        iframe.src = src;
+        if (overlay) overlay.style.display = 'flex';
+        if (currentPlayingVideo === iframe) currentPlayingVideo = null;
+        return;
+    }
+
+    if (!iframe.src.includes('autoplay=1')) return; // já parado
+
+    iframe.src = iframe.src.replace('autoplay=1', 'autoplay=0');
+    if (overlay) overlay.style.display = 'flex';
+    if (currentPlayingVideo === iframe) currentPlayingVideo = null;
 }
 
 function setupMobileCarousel() {
     const dotsContainer = document.querySelector('.carousel-dots');
     const videos = document.querySelectorAll('.video-item');
 
-    // Cria dots
     dotsContainer.innerHTML = '';
     videos.forEach((_, i) => {
         const dot = document.createElement('div');
@@ -232,7 +289,6 @@ function setupMobileCarousel() {
         dotsContainer.appendChild(dot);
     });
 
-    // Atualiza dots durante o scroll
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -240,6 +296,15 @@ function setupMobileCarousel() {
                 document.querySelectorAll('.dot').forEach((dot, i) => {
                     dot.classList.toggle('active', i === index);
                 });
+
+                // Pausa o vídeo quando sair da tela
+                if (currentPlayingVideo) {
+                    const iframe = entry.target.querySelector('iframe');
+                    if (iframe && iframe === currentPlayingVideo && !entry.isIntersecting) {
+                        const overlay = entry.target.querySelector('.video-overlay');
+                        pauseVideo(iframe, overlay);
+                    }
+                }
             }
         });
     }, { threshold: 0.7 });
@@ -251,15 +316,10 @@ function hideModal(modalId) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
 
-    // Pausa todos os vídeos ao fechar o modal
-    document.querySelectorAll('.video-container iframe').forEach(iframe => {
-        iframe.src = iframe.src.replace('autoplay=1', 'autoplay=0');
-    });
-
-    // Mostra todos os overlays novamente
-    document.querySelectorAll('.video-play-overlay').forEach(overlay => {
-        overlay.style.display = 'flex';
-    });
+    if (currentPlayingVideo) {
+        const overlay = currentPlayingVideo.parentElement.querySelector('.video-overlay');
+        pauseVideo(currentPlayingVideo, overlay);
+    }
 
     modal.style.display = 'none';
     document.body.style.overflow = 'auto';
@@ -269,89 +329,25 @@ function hideModal(modalId) {
 // Utilitários
 // =========================
 function copyToClipboard(text) {
-    if (!navigator.clipboard) {
-        // Fallback para navegadores antigos
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        return Promise.resolve();
-    }
-    return navigator.clipboard.writeText(text);
-}
-
-function setupCopyQRButton() {
-    const copyQRBtn = document.getElementById("copyQRBtn");
-    if (copyQRBtn) {
-        copyQRBtn.addEventListener("click", function() {
-            if (!currentPayload) return;
-
-            copyToClipboard(currentPayload).then(() => {
-                const status = document.getElementById("status");
-                if (status) {
-                    status.textContent = "Código PIX copiado!";
-                    setTimeout(() => status.textContent = '', 3000);
-                }
-
-                const originalText = copyQRBtn.innerHTML;
-                copyQRBtn.innerHTML = '<ion-icon name="checkmark-outline"></ion-icon> Copiado!';
-                setTimeout(() => {
-                    copyQRBtn.innerHTML = originalText;
-                }, 2000);
+    return new Promise((resolve) => {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text).then(resolve).catch(() => {
+                fallbackCopy(text);
+                resolve();
             });
-        });
-    }
-}
-
-// =========================
-// Ajuste de layout responsivo
-// =========================
-function adjustVideoHeight() {
-    const containers = document.querySelectorAll('.video-container');
-    const isMobile = window.innerWidth < 768;
-
-    containers.forEach(container => {
-        container.style.height = isMobile ? '70vh' : '60vh';
+        } else {
+            fallbackCopy(text);
+            resolve();
+        }
     });
 }
 
-// =========================
-// Inicialização
-// =========================
-document.addEventListener('DOMContentLoaded', function() {
-    setupLikeButton();
-    setupPixKeyCopy();
-    setupCopyQRButton();
-    adjustVideoHeight();
-
-    // Fechar modais ao clicar fora
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('modal')) {
-            hideModal(e.target.id);
-        }
-    });
-
-    // Fechar modais com ESC
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            document.querySelectorAll('.modal').forEach(m => hideModal(m.id));
-        }
-    });
-});
-
-window.addEventListener('resize', adjustVideoHeight);
-document.addEventListener('click', (e) => {
-    const videoOverlay = e.target.closest('.video-overlay');
-    if (videoOverlay) {
-        const iframe = videoOverlay.previousElementSibling;
-        if (iframe) {
-            if (iframe.src.includes('autoplay=0')) {
-                iframe.src = iframe.src.replace('autoplay=0', 'autoplay=1');
-                videoOverlay.style.display = 'none';
-            }
-        }
-    }
-});
-console.log('Altura do vídeo:', document.querySelector('.video-item').offsetHeight);
+function fallbackCopy(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+}

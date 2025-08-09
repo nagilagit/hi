@@ -3,31 +3,28 @@
 
 <head>
     <!-- Meta tags básicas -->
-
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Título da página -->
     <title>Nagila Lima | Streamer TikTok</title>
 
     <!-- Favicon simplificado (vazio) -->
-    <link rel="icon" href="data:,">
+    <link rel="icon" href="data:," />
 
     <!-- Pré-conexões para otimizar carregamento das fontes Google -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <!-- Fonte do Google -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
 
     <!-- Folha de estilos local -->
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./style.css" />
 
     <!-- Script externo com defer para não travar carregamento -->
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js" defer></script>
 </head>
-
 
 <body>
 
@@ -55,11 +52,22 @@
 
         <nav aria-label="Links principais">
             <ul>
-                <li><a href="https://www.tiktok.com/@nagilalima22" target="_blank" rel="noopener noreferrer">Assistir minhas Lives</a></li>
-                <li><a href="#" onclick="showVideosModal(); return false;">Vídeos Populares</a></li>
-                <li><a href="#" target="_blank" rel="noopener noreferrer">Tutorial de Danças</a></li>
-                <li><a href="#" id="supportButton" onclick="showPixModal()">Seja um Apoiador</a></li>
-                <li><a href="#" target="_blank" rel="noopener noreferrer">Contato Profissional</a></li>
+                <li>
+                    <a href="https://www.tiktok.com/@nagilalima22" target="_blank" rel="noopener noreferrer">Assistir minhas Lives</a
+                    >
+                </li>
+                <li>
+                    <a href="#" onclick="showVideosModal(); return false;">Vídeos Populares</a>
+                </li>
+                <li>
+                    <a href="#" target="_blank" rel="noopener noreferrer">Tutorial de Danças</a>
+                </li>
+                <li>
+                    <a href="#" id="supportButton" onclick="showPixModal()">Seja um Apoiador</a>
+                </li>
+                <li>
+                    <a href="#" target="_blank" rel="noopener noreferrer">Contato Profissional</a>
+                </li>
             </ul>
         </nav>
 
@@ -78,7 +86,6 @@
         <footer>
             💖 Conteúdo diário no TikTok! 💖<br /> Live todos os dias às 20h
         </footer>
-
     </main>
 
     <!-- Modal PIX -->
@@ -113,27 +120,25 @@
     </div>
 
     <!-- Modal Vídeos -->
-    <div id="videosModal" class="modal">
+    <div id="videosModal" class="modal" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="videosModalTitle">
         <div class="modal-content videos-content">
-            <button class="close-modal" onclick="hideModal('videosModal')">&times;</button>
-            <h3>🎥 Vídeos Populares</h3>
+            <button class="close-modal" aria-label="Fechar modal" onclick="hideModal('videosModal')">&times;</button>
+            <h3 id="videosModalTitle">🎥 Vídeos Populares</h3>
 
-            <!-- Container principal que muda entre grid (desktop) e carrossel (mobile) -->
             <div class="video-container-wrapper">
-                <!-- Vídeos (mantenha seus IDs) -->
-                <div class="video-item" data-video-id="7502111719888669958">
+                <!-- Vídeos -->
+                <div class="video-item tiktok-video" data-video-id="7502111719888669958">
                     <div class="video-placeholder">Carregando vídeo 1...</div>
                 </div>
-                <div class="video-item" data-video-id="7503236531558092087">
+                <div class="video-item tiktok-video" data-video-id="7503236531558092087">
                     <div class="video-placeholder">Carregando vídeo 2...</div>
                 </div>
-                <div class="video-item" data-video-id="7403032047154924805">
+                <div class="video-item tiktok-video" data-video-id="7403032047154924805">
                     <div class="video-placeholder">Carregando vídeo 3...</div>
                 </div>
             </div>
 
-            <!-- Indicadores (só aparecem no mobile) -->
-            <div class="carousel-dots"></div>
+            <div class="carousel-dots" aria-label="Navegação por vídeos"></div>
         </div>
     </div>
 
@@ -141,7 +146,7 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-    <script src="./script.js"></script>
+    <script src="./script.js" defer></script>
 
 </body>
 
