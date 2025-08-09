@@ -123,3 +123,21 @@ function calcularCRC16(data) {
     }
     return crc.toString(16).toUpperCase().padStart(4, '0');
 }
+
+function changeValue(amount) {
+    const input = document.getElementById("valor");
+    let value = parseInt(input.value) || 0;
+    value += amount;
+
+    // Garante que o valor não seja menor que 1
+    if (value < 1) value = 1;
+
+    input.value = value;
+
+    // Efeito visual no botão pressionado
+    const button = amount > 0 ? document.querySelector('.plus') : document.querySelector('.minus');
+    button.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+        button.style.transform = 'scale(1.1)';
+    }, 100);
+}

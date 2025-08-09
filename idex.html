@@ -76,8 +76,15 @@
             <span class="close-modal" onclick="hidePixModal()">&times;</span>
             <h3>💖 Apoie meu trabalho</h3>
             <p>Digite o valor (mínimo R$1):</p>
-            <input type="number" id="valor" min="1" step="0.01" placeholder="Ex: 10.50" />
-            <button onclick="gerarPix()">Gerar QR Code</button>
+
+            <!-- Controle de Valor Integrado -->
+            <div class="value-control">
+                <button class="value-btn minus" onclick="changeValue(-1)">−</button>
+                <input type="number" id="valor" min="1" step="1" value="5" placeholder="Ex: 10" />
+                <button class="value-btn plus" onclick="changeValue(1)">+</button>
+            </div>
+
+            <button class="generate-btn" onclick="gerarPix()">Gerar QR Code</button>
             <div id="qrcode"></div>
             <p id="status"></p>
             <div class="pix-key">

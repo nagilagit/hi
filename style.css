@@ -454,3 +454,104 @@ footer {
         height: 150px;
     }
 }
+
+
+/* Controle de Valor */
+
+.value-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px 0;
+    gap: 5px;
+}
+
+.value-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--pink-accent);
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.value-btn:hover {
+    transform: scale(1.1);
+    background: #ff4785;
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+}
+
+.value-btn:active {
+    transform: scale(0.95);
+}
+
+.value-btn.minus {
+    padding-bottom: 5px;
+}
+
+.value-btn.plus {
+    padding-bottom: 2px;
+}
+
+
+/* Ajuste do input */
+
+.value-control input[type="number"] {
+    width: 80px;
+    margin: 0;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+
+/* Remover setinhas do input number */
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+
+/* Apenas os textos que estavam pretos */
+
+.modal-content,
+.modal-content p,
+.modal-content .pix-key p,
+.modal-content #status {
+    color: white !important;
+}
+
+
+/* Input - texto branco mas placeholder mais claro */
+
+.modal-content input[type="number"] {
+    color: white !important;
+}
+
+.modal-content input::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+
+/* Mantém a cor rosa nos botões e ícones */
+
+.modal-content .value-btn,
+.modal-content .generate-btn,
+.modal-content .key-box,
+.modal-content .close-modal {
+    /* Não altera essas cores */
+}
