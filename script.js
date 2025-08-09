@@ -195,17 +195,78 @@ function showVideosModal() {
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
 
+    // Carrega os vídeos sem autoplay
     document.querySelectorAll('.video-container:not(.loaded)').forEach(container => {
         const videoId = container.getAttribute('data-video-id');
         container.innerHTML = `
-            <iframe src="https://www.tiktok.com/embed/v2/${videoId}"
+            <div class="video-play-overlay">
+                <ion-icon name="play-circle-outline"></ion-icon>
+                <p>Clique para assistir</p>
+            </div>
+            <iframe src="https://www.tiktok.com/embed/v2/${videoId}?autoplay=0"
                     frameborder="0"
                     allowfullscreen
                     loading="lazy"
+                    allow="autoplay"
                     style="width:100%;height:100%;">
             </iframe>`;
         container.classList.add('loaded');
     });
+
+    // Controle de clique nos vídeos
+    document.querySelectorAll('.video-container').forEach(container => {
+        container.addEventListener('click', function(e) {
+            // Evita que clique no iframe dispare o evento
+            if (e.target.tagName === 'IFRAME') return;
+
+            const iframe = this.querySelector('iframe');
+            const overlay = this.querySelector('.video-play-overlay');
+
+            // Pausa todos os outros vídeos
+            document.querySelectorAll('.video-container').forEach(otherContainer => {
+                if (otherContainer !== container) {
+                    const otherIframe = otherContainer.querySelector('iframe');
+                    const otherOverlay = otherContainer.querySelector('.video-play-overlay');
+
+                    if (otherIframe) {
+                        otherIframe.src = otherIframe.src.replace('autoplay=1', 'autoplay=0');
+                    }
+                    if (otherOverlay) {
+                        otherOverlay.style.display = 'flex';
+                    }
+                }
+            });
+
+            // Toca o vídeo clicado
+            if (iframe && overlay) {
+                if (iframe.src.includes('autoplay=1')) {
+                    iframe.src = iframe.src.replace('autoplay=1', 'autoplay=0');
+                    overlay.style.display = 'flex';
+                } else {
+                    iframe.src = iframe.src.replace('autoplay=0', 'autoplay=1');
+                    overlay.style.display = 'none';
+                }
+            }
+        });
+    });
+}
+
+function hideModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+
+    // Pausa todos os vídeos ao fechar o modal
+    document.querySelectorAll('.video-container iframe').forEach(iframe => {
+        iframe.src = iframe.src.replace('autoplay=1', 'autoplay=0');
+    });
+
+    // Mostra todos os overlays novamente
+    document.querySelectorAll('.video-play-overlay').forEach(overlay => {
+        overlay.style.display = 'flex';
+    });
+
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
 }
 
 function hideModal(modalId) {

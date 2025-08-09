@@ -1,16 +1,31 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="light">
+<html lang="pt-br" class="light">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Meta tags básicas -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Título da página -->
     <title>Nagila Lima | Streamer TikTok</title>
-    <link rel="stylesheet" href="./style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
-    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
+    <!-- Favicon simplificado (vazio) -->
+    <link rel="icon" href="data:,">
+
+    <!-- Pré-conexões para otimizar carregamento das fontes Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Fonte do Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Folha de estilos local -->
+    <link rel="stylesheet" href="./style.css">
+
+    <!-- Script externo com defer para não travar carregamento -->
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js" defer></script>
 </head>
+
 
 <body>
 
@@ -39,7 +54,7 @@
         <nav aria-label="Links principais">
             <ul>
                 <li><a href="https://www.tiktok.com/@nagilalima22" target="_blank" rel="noopener noreferrer">Assistir minhas Lives</a></li>
-                <li><a href="#" onclick="showVideosModal(); return false;">Meus Vídeos Mais Populares</a></li>
+                <li><a href="#" onclick="showVideosModal(); return false;">Vídeos Populares</a></li>
                 <li><a href="#" target="_blank" rel="noopener noreferrer">Tutorial de Danças</a></li>
                 <li><a href="#" id="supportButton" onclick="showPixModal()">Seja um Apoiador</a></li>
                 <li><a href="#" target="_blank" rel="noopener noreferrer">Contato Profissional</a></li>
@@ -99,13 +114,15 @@
     <div id="videosModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="videosModalTitle" tabindex="-1">
         <div class="modal-content videos-content">
             <button class="close-modal" aria-label="Fechar modal" onclick="hideModal('videosModal')">&times;</button>
-            <h3 id="videosModalTitle">🎥 Meus Vídeos Mais Populares</h3>
+            <h3 id="videosModalTitle">🎥 Vídeos Populares</h3>
 
             <div class="video-grid" aria-live="polite" aria-atomic="true">
                 <!-- Vídeos serão carregados aqui via JavaScript -->
-                <div class="video-container" data-video-id="7502111719888669958" role="region" aria-label="Vídeo TikTok 1"></div>
-                <div class="video-container" data-video-id="7503236531558092087" role="region" aria-label="Vídeo TikTok 2"></div>
-                <div class="video-container" data-video-id="7403032047154924805" role="region" aria-label="Vídeo TikTok 3"></div>
+
+                <iframe class="video-container" src="https://www.tiktok.com/embed/v2/7502111719888669958" allow="accelerometer; gyroscope; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+                <iframe class="video-container" src="https://www.tiktok.com/embed/v2/7503236531558092087" allow="accelerometer; gyroscope; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+                <iframe class="video-container" src="https://www.tiktok.com/embed/v2/7403032047154924805" allow="accelerometer; gyroscope; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+
             </div>
         </div>
     </div>

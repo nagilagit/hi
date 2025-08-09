@@ -579,32 +579,35 @@ input[type=number] {
 
 
 /* =========================
-   Grid vídeos modal
+   Grid de Vídeos Modal - Estilos Principais
    ========================= */
 
 .video-grid {
     display: grid;
     gap: 20px;
-    grid-template-columns: 1fr;
-    margin-top: 20px;
-    max-height: 70vh;
-    overflow-y: auto;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 .video-container {
-    aspect-ratio: 9 / 16;
-    /* proporção TikTok */
     width: 100%;
-    max-width: 350px;
-    height: 70vh;
-    max-height: 500px;
-    margin: 0 auto;
+    aspect-ratio: 9/16;
+    max-height: 80vh;
     border-radius: 12px;
     overflow: hidden;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--pink-accent);
-    transition: all 0.3s ease, height 0.5s ease-out;
+    position: relative;
+    margin: 0 auto;
+    transition: transform 0.3s ease;
+}
+
+.video-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(255, 105, 180, 0.4);
 }
 
 .video-container iframe {
@@ -613,53 +616,241 @@ input[type=number] {
     border: none;
 }
 
-.video-container:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(255, 105, 180, 0.4);
+.video-play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: opacity 0.3s;
+}
+
+.video-play-overlay ion-icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    color: var(--pink-accent);
+}
+
+.video-play-overlay p {
+    text-align: center;
+    max-width: 80%;
 }
 
 
 /* =========================
-   Responsividade vídeos modal
+   Responsividade - Vídeos
    ========================= */
 
-@media (min-width: 768px) {
+
+/* Tablets e telas médias */
+
+@media (min-width: 769px) and (max-width: 1199px) {
     .video-grid {
         grid-template-columns: repeat(2, 1fr);
-        max-height: 60vh;
+        max-width: 800px;
     }
     .video-container {
-        height: 60vh;
+        max-width: 380px;
     }
 }
+
+
+/* Desktop grandes */
 
 @media (min-width: 1200px) {
     .video-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 25px;
-        max-width: 900px;
-        margin: 0 auto;
+        max-width: 1200px;
     }
     .video-container {
-        height: 55vh;
-        max-width: 280px;
+        max-width: 350px;
     }
 }
 
-@media (max-width: 767px) {
-    .video-container {
-        height: 65vh;
-        max-height: 400px;
-    }
-}
+
+/* Dispositivos móveis pequenos */
 
 @media (max-width: 480px) {
+    .video-grid {
+        grid-template-columns: 1fr;
+        padding: 5px;
+    }
+    .video-container {
+        max-height: 75vh;
+        max-width: 100%;
+    }
     .modal-content {
-        margin: 20% auto;
-        padding: 20px;
+        margin: 15% auto;
+        padding: 15px;
+        width: 95%;
     }
     #qrcode {
         width: 150px;
         height: 150px;
     }
+    .video-play-overlay {
+        font-size: 1rem;
+    }
+    .video-play-overlay ion-icon {
+        font-size: 2.5rem;
+    }
+}
+
+
+/* Dispositivos móveis médios */
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .video-grid {
+        grid-template-columns: 1fr;
+    }
+    .video-container {
+        max-height: 70vh;
+        max-width: 450px;
+    }
+}
+
+
+/*Estilo do overlay de play:*/
+
+.video-play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: opacity 0.3s;
+}
+
+.video-play-overlay ion-icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    color: var(--pink-accent);
+}
+
+.video-play-overlay p {
+    text-align: center;
+    max-width: 80%;
+}
+
+
+/* =========================
+   Ajuste ESPECÍFICO para a largura dos vídeos
+   ========================= */
+
+
+/* Container principal do modal de vídeos */
+
+#videosModal .modal-content {
+    width: 90vw;
+    /* Ocupa 90% da largura da tela */
+    max-width: 1200px;
+    /* Máximo de 1200px */
+    padding: 20px;
+}
+
+
+/* Grid que contém os vídeos */
+
+.video-grid {
+    width: 100%;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+
+/* Container de cada vídeo individual */
+
+.video-container {
+    width: 100% !important;
+    /* Força largura total */
+    min-width: 300px;
+    /* Largura mínima */
+    aspect-ratio: 9/16;
+    /* Mantém proporção vertical */
+    max-height: 80vh;
+}
+
+
+/* Responsividade para telas menores */
+
+@media (max-width: 768px) {
+    #videosModal .modal-content {
+        width: 95vw;
+        /* Aumenta para 95% em mobile */
+        padding: 10px;
+    }
+    .video-grid {
+        grid-template-columns: 1fr;
+        /* Uma coluna em mobile */
+    }
+    .video-container {
+        min-width: unset;
+        /* Remove largura mínima */
+        width: 100% !important;
+    }
+}
+
+
+/* Ajuste para quando tiver apenas 1 vídeo */
+
+.video-grid:has(.video-container:only-child) {
+    display: flex;
+    justify-content: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.video-grid:has(.video-container:only-child) .video-container {
+    width: 80% !important;
+    max-width: 500px;
+}
+
+#videosModal .close-modal {
+    display: none;
+}
+
+.video-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    width: 100%;
+    padding: 15px;
+}
+
+.video-wrapper {
+    position: relative;
+    padding-bottom: 177.78%;
+    /* Proporção 16:9 */
+    overflow: hidden;
+    border-radius: 12px;
+    background: #000;
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
 }
