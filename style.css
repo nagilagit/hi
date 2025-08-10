@@ -10,7 +10,6 @@
     --surface-color: rgba(255, 255, 255, 0.1);
     --stroke-color: rgba(255, 255, 255, 0.5);
     --highlight-color: rgba(255, 105, 180, 0.3);
-    /* rosa streamer */
     --icon-hover: rgba(255, 105, 180, 0.2);
     --pink-accent: #ff69b4;
 }
@@ -40,8 +39,9 @@
 }
 
 body {
-    background: var(--bg-image) no-repeat top center/cover;
-    height: 100%;
+    background: var(--bg-image) no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
     transition: background 0.3s ease;
 }
 
