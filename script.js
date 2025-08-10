@@ -191,7 +191,7 @@ function showVideosModal() {
 
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
-
+    modal.style.overflow = 'auto';
     loadVideos();
 
     if (window.innerWidth <= 768) {
