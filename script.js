@@ -75,8 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function showPixModal() {
     const modal = document.getElementById('pixModal');
     if (!modal) return;
-    modal.style.display = 'block';
-    document.body.style.overflow = 'auto';
+    modal.style.display = 'flex'; // flex para centralizar
+    document.body.style.overflow = 'hidden';
     document.getElementById('valor').focus();
 }
 
