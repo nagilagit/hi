@@ -63,8 +63,11 @@ function setupLikeButton() {
     }
 }
 
-// Chamar a função quando o DOM estiver carregado
-document.addEventListener('DOMContentLoaded', setupLikeButton);
+document.addEventListener('DOMContentLoaded', () => {
+    setupLikeButton();
+    setupPixKeyCopy(); // agora realmente ativa o copiar
+});
+
 
 // =========================
 // Modal PIX
@@ -81,14 +84,16 @@ function hidePixModal() {
     const modal = document.getElementById('pixModal');
     if (!modal) return;
     modal.style.display = 'none';
+    modal.style.display.overflow = 'auto';
     document.body.style.overflow = 'auto';
 }
 
 function setupPixKeyCopy() {
+    // Copiar chave PIX ao clicar na caixa
     const keyBox = document.querySelector('.key-box');
     if (keyBox) {
         keyBox.addEventListener('click', function() {
-            const chave = this.textContent.trim();
+            const chave = this.innerText.trim(); // <-- mais seguro que textContent
             copyToClipboard(chave).then(() => {
                 const status = document.getElementById('status');
                 if (status) {
@@ -98,7 +103,31 @@ function setupPixKeyCopy() {
             });
         });
     }
+
+    // Copiar código PIX (payload) ao clicar no botão
+    const copyQRBtn = document.getElementById("copyQRBtn");
+    if (copyQRBtn) {
+        copyQRBtn.addEventListener("click", function() {
+            if (!currentPayload) {
+                const status = document.getElementById("status");
+                if (status) {
+                    status.textContent = "Gere o QR Code primeiro!";
+                    setTimeout(() => status.textContent = '', 3000);
+                }
+                return;
+            }
+
+            copyToClipboard(currentPayload).then(() => {
+                const status = document.getElementById("status");
+                if (status) {
+                    status.textContent = "Código PIX copiado!";
+                    setTimeout(() => status.textContent = '', 3000);
+                }
+            });
+        });
+    }
 }
+
 
 // =========================
 // Gerador PIX
@@ -208,7 +237,7 @@ function showVideosModal() {
     if (!modal) return;
 
     modal.style.display = 'block';
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'auto';
     modal.style.overflow = 'auto';
     loadVideos();
 
