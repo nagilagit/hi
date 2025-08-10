@@ -36,17 +36,35 @@ function setupLikeButton() {
         likeButton.addEventListener('click', function() {
             this.classList.toggle('liked');
 
-            let number = parseFloat(likeCount.textContent.replace('K', '')) *
-                (likeCount.textContent.includes('K') ? 1000 : 1);
+            // Obter o valor atual
+            let currentText = likeCount.textContent;
+            let isK = currentText.includes('K');
+            let number = parseFloat(currentText.replace('K', ''));
 
-            number += this.classList.contains('liked') ? 1 : -1;
+            // Converter para número absoluto
+            let absoluteNumber = isK ? number * 1000 : number;
 
-            likeCount.textContent = number >= 1000 ?
-                (number / 1000).toFixed(1) + 'K' :
-                number.toString();
+            // Ajustar o valor (+1 ou -1)
+            absoluteNumber += this.classList.contains('liked') ? 1 : -1;
+
+            // Garantir que não fique negativo
+            absoluteNumber = Math.max(0, absoluteNumber);
+
+            // Formatando o resultado
+            if (absoluteNumber >= 1000) {
+                likeCount.textContent = (absoluteNumber / 1000).toFixed(1).replace('.0', '') + 'K';
+            } else {
+                likeCount.textContent = absoluteNumber.toString();
+            }
+
+            // Atualizar aria-pressed
+            this.setAttribute('aria-pressed', this.classList.contains('liked'));
         });
     }
 }
+
+// Chamar a função quando o DOM estiver carregado
+document.addEventListener('DOMContentLoaded', setupLikeButton);
 
 // =========================
 // Modal PIX
