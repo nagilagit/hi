@@ -35,7 +35,7 @@
             <img src="./nagila.jpeg" alt="Foto de Nagila Lima, criadora de conteúdo no TikTok" class="profile-img" width="120" height="120" />
 
             <p><strong>@Nagilalima22</strong></p>
-            <p class="bio">Streamer • fisioterapeuta • Criadora de Conteúdo</p>
+            <p class="bio">Streamer • Fisioterapeuta • Criadora de Conteúdo</p>
 
             <div id="switch" role="switch" tabindex="0" aria-checked="false" aria-label="Alternar tema claro/escuro" onclick="toggleMode()" onkeydown="if(event.key === 'Enter' || event.key === ' ') toggleMode()">
                 <span class="switch-button"></span>
@@ -61,7 +61,7 @@
                     <a href="#" onclick="showVideosModal(); return false;">Vídeos Populares</a>
                 </li>
                 <li>
-                    <a href="#" target="_blank" rel="noopener noreferrer">Tutorial de Danças</a>
+                    <a href="#" onclick="showJourneyModal(); return false;">Minha Jornada</a>
                 </li>
                 <li>
                     <a href="#" id="supportButton" onclick="showPixModal()">Seja um Apoiador</a>
@@ -138,6 +138,27 @@
                         <div>Carregando vídeo 3...</div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Modal Minha Jornada -->
+    <!-- Modal Minha Jornada -->
+    <div id="journeyModal" class="modal" style="display:none;">
+        <div class="modal-content" style="max-width:600px;">
+            <button class="close-modal" onclick="hideJourneyModal()">&times;</button>
+            <h3>🌟 Minha Jornada</h3>
+            <div class="text-content">
+                <p>No TikTok, eu crio vídeos sobre diversos temas, mas meu foco principal é fazer lives para alegrar as pessoas, trazer energia positiva e diversão para o dia a dia.</p>
+                <p>Gosto de usar essa plataforma para conectar com o público de forma autêntica e leve, sempre buscando espalhar boas vibrações.</p>
+                <br>
+                <p>Além do TikTok, sou fisioterapeuta e adoro estudar para me aprimorar tanto na minha profissão quanto em outras áreas da vida.</p>
+                <p>Acho que o aprendizado constante é essencial para crescer e ajudar melhor quem precisa.</p>
+
+                <!-- Cole aqui todo o texto que você quer mostrar -->
             </div>
         </div>
     </div>

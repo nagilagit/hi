@@ -410,3 +410,17 @@ function fecharmodal() {
     document.body.style.overflow = 'auto';
 
 }
+
+// Mostrar modal da jornada
+function showJourneyModal() {
+    const modal = document.getElementById("journeyModal");
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+// Fechar modal
+function hideJourneyModal() {
+    const modal = document.getElementById("journeyModal");
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
