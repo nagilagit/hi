@@ -184,6 +184,8 @@ function changeValue(amount) {
 // Modal de Vídeos - Controle corrigido para autoplay controlado
 // =========================
 function showVideosModal() {
+    let modal1 = document.getElementById("videosModalContainer");
+    modal1.style.display = "block";
     const modal = document.getElementById('videosModal');
     if (!modal) return;
 
@@ -316,13 +318,15 @@ function hideModal(modalId) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
 
-    if (currentPlayingVideo) {
-        const overlay = currentPlayingVideo.parentElement.querySelector('.video-overlay');
-        pauseVideo(currentPlayingVideo, overlay);
-    }
+    // Pausa todos os vídeos antes de fechar
+    document.querySelectorAll('.tiktok-iframe').forEach(iframe => {
+        const overlay = iframe.parentElement.querySelector('.video-overlay');
+        pauseVideo(iframe, overlay);
+    });
 
     modal.style.display = 'none';
     document.body.style.overflow = 'auto';
+    currentPlayingVideo = null; // Reseta o vídeo atual
 }
 
 // =========================
@@ -353,10 +357,9 @@ function fallbackCopy(text) {
 }
 
 function fecharmodal() {
-    const modal = document.getElementById("videosModalContainer");
-    modal.style.display = "none";
-}
+    let modal1 = document.getElementById("videosModalContainer");
+    modal1.style.display = "none";
 
-function hideVideoModal() {
-    fecharmodal(); // Reutiliza a mesma função
+    document.body.style.overflow = 'auto';
+
 }
