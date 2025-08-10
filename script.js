@@ -55,7 +55,7 @@ function showPixModal() {
     const modal = document.getElementById('pixModal');
     if (!modal) return;
     modal.style.display = 'block';
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'auto';
     document.getElementById('valor').focus();
 }
 
