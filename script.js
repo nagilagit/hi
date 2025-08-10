@@ -351,3 +351,12 @@ function fallbackCopy(text) {
     document.execCommand('copy');
     document.body.removeChild(textarea);
 }
+
+function fecharmodal() {
+    const modal = document.getElementById("videosModalContainer");
+    modal.style.display = "none";
+}
+
+function hideVideoModal() {
+    fecharmodal(); // Reutiliza a mesma função
+}

@@ -2,6 +2,7 @@
 <html lang="pt-br" class="light">
 
 <head>
+
     <!-- Meta tags básicas -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -120,25 +121,25 @@
     </div>
 
     <!-- Modal Vídeos -->
-    <div id="videosModal" class="modal" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="videosModalTitle">
-        <div class="modal-content videos-content">
-            <button class="close-modal" aria-label="Fechar modal" onclick="hideModal('videosModal')">&times;</button>
-            <h3 id="videosModalTitle">🎥 Vídeos Populares</h3>
+    <div class="modamodal" id="videosModalContainer">
+        <button class="modal-close-btn" onclick="hideVideoModal()">X</button>
 
-            <div class="video-container-wrapper">
-                <!-- Vídeos -->
-                <div class="video-item tiktok-video" data-video-id="7502111719888669958">
-                    <div class="video-placeholder">Carregando vídeo 1...</div>
-                </div>
-                <div class="video-item tiktok-video" data-video-id="7503236531558092087">
-                    <div class="video-placeholder">Carregando vídeo 2...</div>
-                </div>
-                <div class="video-item tiktok-video" data-video-id="7403032047154924805">
-                    <div class="video-placeholder">Carregando vídeo 3...</div>
+        <div id="videosModal" class="modal" role="dialog" aria-modal="true" tabindex="-1">
+            <div class="modal-content videos-content">
+                <h3>🎥 Vídeos Populares<button onclick="fecharmodal()">x</button></h3>
+
+                <div class="video-container-wrapper">
+                    <div class="video-item" data-video-id="7502111719888669958">
+                        <div>Carregando vídeo 1...</div>
+                    </div>
+                    <div class="video-item" data-video-id="7503236531558092087">
+                        <div>Carregando vídeo 2...</div>
+                    </div>
+                    <div class="video-item" data-video-id="7403032047154924805">
+                        <div>Carregando vídeo 3...</div>
+                    </div>
                 </div>
             </div>
-
-            <div class="carousel-dots" aria-label="Navegação por vídeos"></div>
         </div>
     </div>
 
