@@ -424,3 +424,16 @@ function hideJourneyModal() {
     modal.style.display = 'none';
     document.body.style.overflow = 'auto';
 }
+
+function openEmail() {
+    const mailtoLink = 'mailto:nagilalimanah@gmail.com';
+    const gmailLink = 'https://mail.google.com/mail/?view=cm&fs=1&to=nagilalimanah@gmail.com';
+
+    // Tenta abrir o mailto, se der problema, abre o Gmail
+    window.location.href = mailtoLink;
+
+    // Como fallback, depois de um tempo abre Gmail (não 100% garantido, mas ajuda)
+    setTimeout(() => {
+        window.open(gmailLink, '_blank', 'noopener,noreferrer');
+    }, 500);
+}
