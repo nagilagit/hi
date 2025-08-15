@@ -3,6 +3,7 @@ let qrCodeGenerated = null;
 let currentQRValue = 0;
 let currentPayload = "";
 let currentPlayingVideo = null;
+let currentLanguage = 'portuguese';
 
 // =========================
 // Modo claro/escuro
@@ -65,9 +66,8 @@ function setupLikeButton() {
 
 document.addEventListener('DOMContentLoaded', () => {
     setupLikeButton();
-    setupPixKeyCopy(); // agora realmente ativa o copiar
+    setupPixKeyCopy();
 });
-
 
 // =========================
 // Modal PIX
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function showPixModal() {
     const modal = document.getElementById('pixModal');
     if (!modal) return;
-    modal.style.display = 'flex'; // flex para centralizar
+    modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
     document.getElementById('valor').focus();
 }
@@ -84,16 +84,14 @@ function hidePixModal() {
     const modal = document.getElementById('pixModal');
     if (!modal) return;
     modal.style.display = 'none';
-    modal.style.display.overflow = 'auto';
     document.body.style.overflow = 'auto';
 }
 
 function setupPixKeyCopy() {
-    // Copiar chave PIX ao clicar na caixa
     const keyBox = document.querySelector('.key-box');
     if (keyBox) {
         keyBox.addEventListener('click', function() {
-            const chave = this.innerText.trim(); // <-- mais seguro que textContent
+            const chave = this.innerText.trim();
             copyToClipboard(chave).then(() => {
                 const status = document.getElementById('status');
                 if (status) {
@@ -104,7 +102,6 @@ function setupPixKeyCopy() {
         });
     }
 
-    // Copiar código PIX (payload) ao clicar no botão
     const copyQRBtn = document.getElementById("copyQRBtn");
     if (copyQRBtn) {
         copyQRBtn.addEventListener("click", function() {
@@ -127,7 +124,6 @@ function setupPixKeyCopy() {
         });
     }
 }
-
 
 // =========================
 // Gerador PIX
@@ -228,7 +224,7 @@ function changeValue(amount) {
 }
 
 // =========================
-// Modal de Vídeos - Controle corrigido para autoplay controlado
+// Modal de Vídeos
 // =========================
 function showVideosModal() {
     let modal1 = document.getElementById("videosModalContainer");
@@ -238,7 +234,6 @@ function showVideosModal() {
 
     modal.style.display = 'block';
     document.body.style.overflow = 'auto';
-    modal.style.overflow = 'auto';
     loadVideos();
 
     if (window.innerWidth <= 768) {
@@ -293,13 +288,12 @@ document.addEventListener('click', function(e) {
 
 function playVideo(iframe, overlay) {
     if (window.innerWidth <= 768) {
-        // Mobile: apenas oculta o overlay para permitir controle nativo do player
         overlay.style.display = 'none';
         currentPlayingVideo = iframe;
         return;
     }
 
-    if (iframe.src.includes('autoplay=1')) return; // já tocando
+    if (iframe.src.includes('autoplay=1')) return;
 
     iframe.src = iframe.src.replace('autoplay=0', 'autoplay=1');
     overlay.style.display = 'none';
@@ -308,7 +302,6 @@ function playVideo(iframe, overlay) {
 
 function pauseVideo(iframe, overlay) {
     if (window.innerWidth <= 768) {
-        // Mobile: recarrega iframe para parar o vídeo e mostra overlay
         const src = iframe.src;
         iframe.src = '';
         iframe.src = src;
@@ -317,7 +310,7 @@ function pauseVideo(iframe, overlay) {
         return;
     }
 
-    if (!iframe.src.includes('autoplay=1')) return; // já parado
+    if (!iframe.src.includes('autoplay=1')) return;
 
     iframe.src = iframe.src.replace('autoplay=1', 'autoplay=0');
     if (overlay) overlay.style.display = 'flex';
@@ -346,7 +339,6 @@ function setupMobileCarousel() {
                     dot.classList.toggle('active', i === index);
                 });
 
-                // Pausa o vídeo quando sair da tela
                 if (currentPlayingVideo) {
                     const iframe = entry.target.querySelector('iframe');
                     if (iframe && iframe === currentPlayingVideo && !entry.isIntersecting) {
@@ -365,7 +357,6 @@ function hideModal(modalId) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
 
-    // Pausa todos os vídeos antes de fechar
     document.querySelectorAll('.tiktok-iframe').forEach(iframe => {
         const overlay = iframe.parentElement.querySelector('.video-overlay');
         pauseVideo(iframe, overlay);
@@ -373,7 +364,55 @@ function hideModal(modalId) {
 
     modal.style.display = 'none';
     document.body.style.overflow = 'auto';
-    currentPlayingVideo = null; // Reseta o vídeo atual
+    currentPlayingVideo = null;
+}
+
+// =========================
+// Modal PayPal
+// =========================
+function paypalModal() {
+    document.getElementById('paypalModal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    updatePaypalAmount();
+}
+
+function hidePaypalModal() {
+    document.getElementById('paypalModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+function changePaypalValue(amount) {
+    const input = document.getElementById('paypalValue');
+    let value = parseInt(input.value) + amount;
+    value = Math.max(value, parseInt(input.min));
+    input.value = value;
+    updatePaypalAmount();
+}
+
+function updatePaypalAmount() {
+    const value = document.getElementById('paypalValue').value;
+    document.getElementById('paypalAmount').value = value;
+}
+
+// =========================
+// Modal Minha Jornada
+// =========================
+function showJourneyModal() {
+    const modal = document.getElementById("journeyModal");
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function hideJourneyModal() {
+    const modal = document.getElementById("journeyModal");
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+function fecharmodal() {
+    let modal1 = document.getElementById("videosModalContainer");
+    modal1.style.display = "none";
+    document.body.style.overflow = 'auto';
 }
 
 // =========================
@@ -403,37 +442,98 @@ function fallbackCopy(text) {
     document.body.removeChild(textarea);
 }
 
-function fecharmodal() {
-    let modal1 = document.getElementById("videosModalContainer");
-    modal1.style.display = "none";
+// =========================
+// Traduções
+// =========================
+const translations = {
+    portuguese: {
+        "Streamer • Physiotherapist • Content Creator": "Streamer • Fisioterapeuta • Criadora de Conteúdo",
+        "Watch my Lives": "Assistir minhas Lives",
+        "Popular Videos": "Vídeos Populares",
+        "My Journey": "Minha Jornada",
+        "Become a Supporter": "Seja um Apoiador",
+        "Professional Contact": "Contato Profissional",
+        "Enter the amount (minimum $1):": "Digite o valor (mínimo R$1):",
+        "Decrease value": "Diminuir valor",
+        "Increase value": "Aumentar valor",
+        "Generate QR Code": "Gerar QR Code",
+        "Or copy the PIX key:": "Ou copie a chave PIX:",
+        "💖 Support my work": "💖 Apoie meu trabalho",
+        "🌟 My Journey": "🌟 Minha Jornada",
+        "On TikTok, I create videos on various topics, but my main focus is doing live streams to make people happy, bring positive energy, and fun to everyday life.": "No TikTok, eu crio vídeos sobre diversos temas, mas meu foco principal é fazer lives para alegrar as pessoas, trazer energia positiva e diversão para o dia a dia.",
+        "I like using this platform to connect with the audience authentically and lightly, always seeking to spread good vibes.": "Gosto de usar essa plataforma para conectar com o público de forma autêntica e leve, sempre buscando espalhar boas vibrações.",
+        "Besides TikTok, I am a physiotherapist and love studying to improve both in my profession and other areas of life.": "Além do TikTok, sou fisioterapeuta e adoro estudar para me aprimorar tanto na minha profissão quanto em outras áreas da vida.",
+        "I believe constant learning is essential to grow and better help those in need.": "Acho que o aprendizado constante é essencial para crescer e ajudar melhor quem precisa.",
+        "Portuguese": "Português",
+        "English": "English",
+        "Click here": "Clique aqui",
+        "💖 Daily content on TikTok! 💖": "💖 Conteúdo diário no TikTok! 💖",
+        "Live every day at 8 PM": "Live todos os dias às 20h",
+        "💖 Support my work via PayPal": "💖 Support my work via PayPal",
+        "One-time donation:": "One-time donation:",
+        "Donate via PayPal": "Donate via PayPal",
+        "* You will be redirected to PayPal's secure site": "* You will be redirected to PayPal's secure site"
+    },
+    english: {
+        "Streamer • Fisioterapeuta • Criadora de Conteúdo": "Streamer • Physiotherapist • Content Creator",
+        "Assistir minhas Lives": "Watch my Lives",
+        "Vídeos Populares": "Popular Videos",
+        "Minha Jornada": "My Journey",
+        "Seja um Apoiador": "Become a Supporter",
+        "Contato Profissional": "Professional Contact",
+        "Digite o valor (mínimo R$1):": "Enter the amount (minimum $1):",
+        "Diminuir valor": "Decrease value",
+        "Aumentar valor": "Increase value",
+        "Gerar QR Code": "Generate QR Code",
+        "Ou copie a chave PIX:": "Or copy the PIX key:",
+        "💖 Apoie meu trabalho": "💖 Support my work",
+        "🌟 Minha Jornada": "🌟 My Journey",
+        "No TikTok, eu crio vídeos sobre diversos temas, mas meu foco principal é fazer lives para alegrar as pessoas, trazer energia positiva e diversão para o dia a dia.": "On TikTok, I create videos on various topics, but my main focus is doing live streams to make people happy, bring positive energy, and fun to everyday life.",
+        "Gosto de usar essa plataforma para conectar com o público de forma autêntica e leve, sempre buscando espalhar boas vibrações.": "I like using this platform to connect with the audience authentically and lightly, always seeking to spread good vibes.",
+        "Além do TikTok, sou fisioterapeuta e adoro estudar para me aprimorar tanto na minha profissão quanto em outras áreas da vida.": "Besides TikTok, I am a physiotherapist and love studying to improve both in my profession and other areas of life.",
+        "Acho que o aprendizado constante é essencial para crescer e ajudar melhor quem precisa.": "I believe constant learning is essential to grow and better help those in need.",
+        "Português": "Portuguese",
+        "English": "English",
+        "Clique aqui": "Click here",
+        "💖 Conteúdo diário no TikTok! 💖": "💖 Daily content on TikTok! 💖",
+        "Live todos os dias às 20h": "Live every day at 8 PM",
+        "💖 Support my work via PayPal": "💖 Support my work via PayPal",
+        "One-time donation:": "One-time donation:",
+        "Donate via PayPal": "Doar via PayPal",
+        "* You will be redirected to PayPal's secure site": "* You will be redirected to PayPal's secure site"
+    }
+};
 
-    document.body.style.overflow = 'auto';
+function translatePage(lang) {
+    currentLanguage = lang;
+    document.body.classList.remove('portuguese', 'english');
+    document.body.classList.add(lang);
 
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+    let node;
+
+    while (node = walker.nextNode()) {
+        const trimmed = node.textContent.trim();
+        if (translations[lang] && translations[lang][trimmed]) {
+            node.textContent = translations[lang][trimmed];
+        }
+    }
+
+    document.querySelectorAll('.lang-btn span').forEach(span => {
+        const text = span.textContent.trim();
+        if (translations[lang] && translations[lang][text]) {
+            span.textContent = translations[lang][text];
+        }
+    });
+
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    if (lang === 'english') {
+        document.getElementById('englishBtn').classList.add('active');
+    } else {
+        document.getElementById('portugueseBtn').classList.add('active');
+    }
 }
 
-// Mostrar modal da jornada
-function showJourneyModal() {
-    const modal = document.getElementById("journeyModal");
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-
-// Fechar modal
-function hideJourneyModal() {
-    const modal = document.getElementById("journeyModal");
-    modal.style.display = 'none';
-    document.body.style.overflow = 'auto';
-}
-
-function openEmail() {
-    const mailtoLink = 'mailto:nagilalimanah@gmail.com';
-    const gmailLink = 'https://mail.google.com/mail/?view=cm&fs=1&to=nagilalimanah@gmail.com';
-
-    // Tenta abrir o mailto, se der problema, abre o Gmail
-    window.location.href = mailtoLink;
-
-    // Como fallback, depois de um tempo abre Gmail (não 100% garantido, mas ajuda)
-    setTimeout(() => {
-        window.open(gmailLink, '_blank', 'noopener,noreferrer');
-    }, 500);
-}
+// Eventos dos botões
+document.getElementById('englishBtn').addEventListener('click', () => translatePage('english'));
+document.getElementById('portugueseBtn').addEventListener('click', () => translatePage('portuguese'));

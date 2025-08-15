@@ -28,6 +28,16 @@
 </head>
 
 <body>
+    <div class="language-switcher">
+        <button class="lang-btn active" id="portugueseBtn">
+    <img src="https://flagcdn.com/w20/br.png" alt="Bandeira Brasil" width="20" height="15">
+    <span>pt-BR</span>
+  </button>
+        <button class="lang-btn" id="englishBtn">
+    <img src="https://flagcdn.com/w20/us.png" alt="USA Flag" width="20" height="15">
+    <span>en-US</span>
+  </button>
+    </div>
 
     <main id="container">
 
@@ -54,8 +64,7 @@
         <nav aria-label="Links principais">
             <ul>
                 <li>
-                    <a href="https://www.tiktok.com/@nagilalima22" target="_blank" rel="noopener noreferrer">Assistir minhas Lives</a
-                    >
+                    <a href="https://www.tiktok.com/@nagilalima22" target="_blank" rel="noopener noreferrer">Assistir minhas Lives</a>
                 </li>
                 <li>
                     <a href="#" onclick="showVideosModal(); return false;">Vídeos Populares</a>
@@ -63,13 +72,12 @@
                 <li>
                     <a href="#" onclick="showJourneyModal(); return false;">Minha Jornada</a>
                 </li>
-                <li>
-                    <a href="#" id="supportButton" onclick="showPixModal()">Seja um Apoiador</a>
+                <li class="language-dependent">
+                    <a href="#" id="supportButtonPT" onclick="showPixModal()" class="portuguese-visible">Seja um Apoiador</a>
+                    <a href="#" id="supportButtonEN" onclick="paypalModal()" class="english-visible">Be a Supporter</a>
                 </li>
                 <li>
                     <a href="https://mail.google.com/mail/?view=cm&fs=1&to=nagilalimanah@gmail.com" target="_blank" rel="noopener noreferrer">Contato Profissional</a>
-
-
                 </li>
             </ul>
         </nav>
@@ -147,7 +155,38 @@
 
 
 
-    <!-- Modal Minha Jornada -->
+
+
+
+    <!-- Modal PayPal -->
+    <div id="paypalModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="paypalModalTitle" tabindex="-1">
+        <div class="modal-content">
+            <button class="close-modal" aria-label="Close modal" onclick="hidePaypalModal()">&times;</button>
+            <h3 id="paypalModalTitle">💖 Support my work via PayPal</h3>
+
+            <div class="paypal-donation">
+                <p class="donation-text">One-time donation:</p>
+
+                <div class="value-control">
+                    <button class="value-btn minus" aria-label="Decrease amount" onclick="changePaypalValue(-1)">−</button>
+                    <input type="number" id="paypalValue" min="2" step="5" value="5" aria-label="Donation amount">
+                    <button class="value-btn plus" aria-label="Increase amount" onclick="changePaypalValue(5)">+</button>
+                </div>
+
+                <form action="https://www.paypal.com/donate" method="post" target="_blank">
+                    <input type="hidden" name="business" value="nagilalimanah@gmail.com">
+                    <input type="hidden" name="currency_code" value="BRL">
+                    <input type="hidden" name="amount" id="paypalAmount" value="10">
+                    <button type="submit" class="donate-btn">
+                    <ion-icon name="logo-paypal"></ion-icon> Donate via PayPal
+                </button>
+                </form>
+
+                <p class="donation-note">* You will be redirected to PayPal's secure website</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Minha Jornada -->
     <div id="journeyModal" class="modal" style="display:none;">
         <div class="modal-content" style="max-width:600px;">
